@@ -1,12 +1,16 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
 import { AuthShell } from "@/components/auth/auth-shell"
 import { RegisterForm } from "@/components/auth/register-form"
-import { auth } from "@/lib/auth"
 
 export default async function RegisterPage() {
-  const session = await auth()
-  if (session?.user) redirect("/dashboard")
+  const cookieStore = await cookies()
+  const hasSession =
+    cookieStore.has("authjs.session-token") ||
+    cookieStore.has("__Secure-authjs.session-token") ||
+    cookieStore.has("next-auth.session-token")
+  if (hasSession) redirect("/dashboard")
 
   return (
     <AuthShell

@@ -1,12 +1,17 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
 import { AuthShell } from "@/components/auth/auth-shell"
 import { LoginForm } from "@/components/auth/login-form"
-import { auth } from "@/lib/auth"
 
 export default async function LoginPage() {
-  const session = await auth()
-  if (session?.user) redirect("/dashboard")
+  // If the session cookie is already present, skip the login page.
+  const cookieStore = await cookies()
+  const hasSession =
+    cookieStore.has("authjs.session-token") ||
+    cookieStore.has("__Secure-authjs.session-token") ||
+    cookieStore.has("next-auth.session-token")
+  if (hasSession) redirect("/dashboard")
 
   return (
     <AuthShell

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export function LoginForm() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -28,8 +27,9 @@ export function LoginForm() {
       setError("Invalid email or password.")
       return
     }
-    router.push("/dashboard")
-    router.refresh()
+    // Full navigation so the browser picks up the new session cookie before
+    // the middleware checks it.
+    window.location.href = "/dashboard"
   }
 
   return (
@@ -46,7 +46,15 @@ export function LoginForm() {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="password">Password</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">Password</Label>
+          <Link
+            href="/forgot-password"
+            className="text-xs text-muted-foreground hover:text-primary hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
         <Input
           id="password"
           name="password"

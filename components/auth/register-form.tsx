@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export function RegisterForm() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -46,11 +44,12 @@ export function RegisterForm() {
     })
     setLoading(false)
     if (signInRes?.error) {
-      router.push("/login")
+      window.location.href = "/login"
       return
     }
-    router.push("/dashboard")
-    router.refresh()
+    // Full navigation so the browser picks up the new session cookie before
+    // the middleware checks it.
+    window.location.href = "/dashboard"
   }
 
   return (
