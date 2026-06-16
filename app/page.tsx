@@ -63,11 +63,11 @@ export default async function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/login">Sign in</Link>
+            <Button variant="ghost" size="sm" render={<Link href="/login" />}>
+              Sign in
             </Button>
-            <Button asChild size="sm">
-              <Link href={ctaHref}>Get started</Link>
+            <Button size="sm" render={<Link href={ctaHref} />}>
+              Get started
             </Button>
           </div>
         </div>
@@ -90,14 +90,12 @@ export default async function LandingPage() {
               something runs low.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button asChild size="lg">
-                <Link href={ctaHref}>
-                  Start for free
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+              <Button size="lg" render={<Link href={ctaHref} />}>
+                Start for free
+                <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/login">Sign in</Link>
+              <Button size="lg" variant="outline" render={<Link href="/login" />}>
+                Sign in
               </Button>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
@@ -221,11 +219,9 @@ export default async function LandingPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Join ShelfSync and stop guessing what&apos;s on your shelves.
               </p>
-              <Button asChild size="lg" className="mt-6 w-full">
-                <Link href={ctaHref}>
-                  Create your free workspace
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+              <Button size="lg" className="mt-6 w-full" render={<Link href={ctaHref} />}>
+                Create your free workspace
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
