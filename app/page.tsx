@@ -8,9 +8,10 @@ import {
   BarChart3,
   ShieldCheck,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { Logo } from "@/components/logo"
 import { auth } from "@/lib/auth"
+import { cn } from "@/lib/utils"
 
 const features = [
   {
@@ -63,12 +64,12 @@ export default async function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/login">Sign in</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={ctaHref}>Get started</Link>
-            </Button>
+            <Link href="/login" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+              Sign in
+            </Link>
+            <Link href={ctaHref} className={buttonVariants({ size: "sm" })}>
+              Get started
+            </Link>
           </div>
         </div>
       </header>
@@ -90,15 +91,13 @@ export default async function LandingPage() {
               something runs low.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button asChild size="lg">
-                <Link href={ctaHref}>
-                  Start for free
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/login">Sign in</Link>
-              </Button>
+              <Link href={ctaHref} className={buttonVariants({ size: "lg" })}>
+                Start for free
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/login" className={buttonVariants({ size: "lg", variant: "outline" })}>
+                Sign in
+              </Link>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
               No credit card required. Your workspace comes pre-loaded with demo data.
@@ -221,12 +220,13 @@ export default async function LandingPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Join ShelfSync and stop guessing what&apos;s on your shelves.
               </p>
-              <Button asChild size="lg" className="mt-6 w-full">
-                <Link href={ctaHref}>
-                  Create your free workspace
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
+              <Link
+                href={ctaHref}
+                className={cn(buttonVariants({ size: "lg" }), "mt-6 w-full")}
+              >
+                Create your free workspace
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </section>

@@ -50,16 +50,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id as string
-        // @ts-expect-error custom field
-        token.businessId = user.businessId ?? null
+        token.businessId = (user as { businessId?: string | null }).businessId ?? null
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
-        // @ts-expect-error custom field
-        session.user.businessId = (token.businessId as string | null) ?? null
+        ;(session.user as { businessId?: string | null }).businessId =
+          (token.businessId as string | null) ?? null
       }
       return session
     },
