@@ -8,9 +8,10 @@ import {
   BarChart3,
   ShieldCheck,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { Logo } from "@/components/logo"
 import { auth } from "@/lib/auth"
+import { cn } from "@/lib/utils"
 
 const features = [
   {
@@ -63,12 +64,12 @@ export default async function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" render={<Link href="/login" />}>
+            <Link href="/login" className={buttonVariants({ variant: "ghost", size: "sm" })}>
               Sign in
-            </Button>
-            <Button size="sm" render={<Link href={ctaHref} />}>
+            </Link>
+            <Link href={ctaHref} className={buttonVariants({ size: "sm" })}>
               Get started
-            </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -90,13 +91,13 @@ export default async function LandingPage() {
               something runs low.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button size="lg" render={<Link href={ctaHref} />}>
+              <Link href={ctaHref} className={buttonVariants({ size: "lg" })}>
                 Start for free
                 <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button size="lg" variant="outline" render={<Link href="/login" />}>
+              </Link>
+              <Link href="/login" className={buttonVariants({ size: "lg", variant: "outline" })}>
                 Sign in
-              </Button>
+              </Link>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
               No credit card required. Your workspace comes pre-loaded with demo data.
@@ -219,10 +220,13 @@ export default async function LandingPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Join ShelfSync and stop guessing what&apos;s on your shelves.
               </p>
-              <Button size="lg" className="mt-6 w-full" render={<Link href={ctaHref} />}>
+              <Link
+                href={ctaHref}
+                className={cn(buttonVariants({ size: "lg" }), "mt-6 w-full")}
+              >
                 Create your free workspace
                 <ArrowRight className="h-4 w-4" />
-              </Button>
+              </Link>
             </div>
           </div>
         </section>

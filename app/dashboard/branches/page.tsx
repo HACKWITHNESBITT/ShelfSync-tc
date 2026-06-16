@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getBranches } from "@/lib/queries"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { BranchesList } from "@/components/branches/branches-list"
+import { BranchesList, AddBranchButton } from "@/components/branches/branches-list"
 
 export default async function BranchesPage() {
   const session = await auth()
@@ -17,7 +17,7 @@ export default async function BranchesPage() {
       <PageHeader
         title="Branches"
         description="Manage your store locations"
-        action={<BranchesList.AddButton businessId={businessId} />}
+        action={<AddBranchButton businessId={businessId} />}
       />
       <BranchesList branches={branches} businessId={businessId} />
     </div>

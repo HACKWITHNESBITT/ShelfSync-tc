@@ -3,9 +3,10 @@ import { redirect, notFound } from "next/navigation"
 import { getBranch, getBranchInventory } from "@/lib/queries"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { BranchInventoryTable } from "@/components/branches/branch-inventory-table"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export default async function BranchDetailPage({
   params,
@@ -28,23 +29,21 @@ export default async function BranchDetailPage({
   return (
     <div>
       <div className="mb-1">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="-ml-2 text-muted-foreground"
-          render={<Link href="/dashboard/branches" />}
+        <Link
+          href="/dashboard/branches"
+          className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "-ml-2 text-muted-foreground")}
         >
           <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
           Branches
-        </Button>
+        </Link>
       </div>
       <PageHeader
         title={branch.name}
         description={[branch.address, branch.city].filter(Boolean).join(", ") || "No address"}
         action={
-          <Button size="sm" render={<Link href="/dashboard/transfers" />}>
+          <Link href="/dashboard/transfers" className={buttonVariants({ size: "sm" })}>
             Transfer stock
-          </Button>
+          </Link>
         }
       />
       <BranchInventoryTable inventory={inventory} branchId={id} businessId={businessId} />

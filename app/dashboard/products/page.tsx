@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getProducts, getBranches } from "@/lib/queries"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { ProductsTable } from "@/components/products/products-table"
+import { ProductsTable, AddProductButton } from "@/components/products/products-table"
 
 export default async function ProductsPage() {
   const session = await auth()
@@ -20,7 +20,7 @@ export default async function ProductsPage() {
       <PageHeader
         title="Products"
         description="Manage your product catalog and set inventory levels per branch"
-        action={<ProductsTable.AddButton businessId={businessId} branches={branches} />}
+        action={<AddProductButton businessId={businessId} branches={branches} />}
       />
       <ProductsTable products={products} businessId={businessId} branches={branches} />
     </div>

@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getTransfers, getBranches, getProducts } from "@/lib/queries"
 import { PageHeader } from "@/components/dashboard/page-header"
-import { TransfersView } from "@/components/transfers/transfers-view"
+import { TransfersView, NewTransferButton } from "@/components/transfers/transfers-view"
 
 export default async function TransfersPage() {
   const session = await auth()
@@ -22,7 +22,7 @@ export default async function TransfersPage() {
         title="Transfers"
         description="Move stock between branches"
         action={
-          <TransfersView.NewTransferButton
+          <NewTransferButton
             branches={branches}
             products={products}
           />

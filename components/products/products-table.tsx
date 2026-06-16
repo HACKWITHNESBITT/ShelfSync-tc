@@ -44,7 +44,7 @@ const CATEGORIES = [
   "Other",
 ]
 
-function AddProductButton({
+export function AddProductButton({
   businessId,
   branches,
 }: {

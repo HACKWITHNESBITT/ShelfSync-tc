@@ -4,7 +4,9 @@ import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Plus, Building2, Package, AlertTriangle, Trash2, ArrowRight } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import {
   Dialog,
@@ -16,10 +18,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import Link from "next/link"
 import type { BranchWithStats } from "@/lib/types"
 
-function AddBranchButton({ businessId }: { businessId: string }) {
+export function AddBranchButton({ businessId }: { businessId: string }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -185,15 +186,13 @@ function BranchCard({
           </div>
         )}
 
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full"
-          render={<Link href={`/dashboard/branches/${branch.id}`} />}
+        <Link
+          href={`/dashboard/branches/${branch.id}`}
+          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-full")}
         >
           View inventory
           <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-        </Button>
+        </Link>
       </CardContent>
     </Card>
   )

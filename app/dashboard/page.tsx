@@ -13,7 +13,7 @@ import { StockChart } from "@/components/dashboard/stock-chart"
 import { ActivityFeed } from "@/components/dashboard/activity-feed"
 import { AlertsList } from "@/components/dashboard/alerts-list"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -34,9 +34,9 @@ export default async function DashboardPage() {
         title="Overview"
         description="Your inventory at a glance"
         action={
-          <Button size="sm" render={<Link href="/dashboard/transfers" />}>
+          <Link href="/dashboard/transfers" className={buttonVariants({ size: "sm" })}>
             New transfer
-          </Button>
+          </Link>
         }
       />
 
@@ -83,9 +83,9 @@ export default async function DashboardPage() {
         <div>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-foreground">Active alerts</h2>
-            <Button variant="ghost" size="sm" render={<Link href="/dashboard/alerts" />}>
+            <Link href="/dashboard/alerts" className={buttonVariants({ variant: "ghost", size: "sm" })}>
               View all
-            </Button>
+            </Link>
           </div>
           <AlertsList alerts={alerts.slice(0, 5)} businessId={businessId} />
         </div>

@@ -33,7 +33,7 @@ import {
 import { toast } from "sonner"
 import type { BranchWithStats, ProductWithStock, TransferDetail } from "@/lib/types"
 
-function NewTransferButton({
+export function NewTransferButton({
   branches,
   products,
 }: {
