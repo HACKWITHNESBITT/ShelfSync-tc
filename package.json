@@ -9,12 +9,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@aws-sdk/client-rds": "^3.1068.0",
-    "@aws-sdk/rds-signer": "^3.1068.0",
     "@base-ui/react": "^1.5.0",
     "@hookform/resolvers": "^5.4.0",
     "@vercel/analytics": "1.6.1",
-    "@vercel/functions": "^3.7.1",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
