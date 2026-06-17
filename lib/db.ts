@@ -36,26 +36,29 @@ function createPool(): Pool {
   })
 }
 
-// Reuse a single pool across hot reloads in dev.
+// Pool is created lazily on first use so that process.env.DATABASE_URL is
+// read at query time rather than at module-import time. This prevents the
+// pool being created before the env file is loaded.
 const globalForPool = globalThis as unknown as { _pgPool?: Pool }
 
-const pool: Pool = globalForPool._pgPool ?? createPool()
-
-if (!globalForPool._pgPool) {
-  // attachDatabasePool is a no-op when DATABASE_URL is used but safe to call.
-  if (!process.env.DATABASE_URL) {
-    attachDatabasePool(pool)
+function getPool(): Pool {
+  if (!globalForPool._pgPool) {
+    const pool = createPool()
+    if (!process.env.DATABASE_URL) {
+      attachDatabasePool(pool)
+    }
+    globalForPool._pgPool = pool
   }
-  globalForPool._pgPool = pool
+  return globalForPool._pgPool
 }
 
 export async function query<T = any>(text: string, params?: unknown[]): Promise<{ rows: T[] }> {
-  const res = await pool.query(text, params)
+  const res = await getPool().query(text, params)
   return { rows: res.rows as T[] }
 }
 
 export async function withTransaction<T>(fn: (client: PoolClient) => Promise<T>): Promise<T> {
-  const client = await pool.connect()
+  const client = await getPool().connect()
   try {
     await client.query("BEGIN")
     const result = await fn(client)
@@ -69,4 +72,4 @@ export async function withTransaction<T>(fn: (client: PoolClient) => Promise<T>)
   }
 }
 
-export { pool }
+export const pool = { query: query as Pool["query"] }
