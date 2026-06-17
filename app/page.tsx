@@ -10,7 +10,7 @@ import {
 } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 import { Logo } from "@/components/logo"
-import { auth } from "@/lib/auth"
+import { cookies } from "next/headers"
 import { cn } from "@/lib/utils"
 
 const features = [
@@ -47,8 +47,12 @@ const features = [
 ]
 
 export default async function LandingPage() {
-  const session = await auth()
-  const ctaHref = session?.user ? "/dashboard" : "/register"
+  const cookieStore = await cookies()
+  const isLoggedIn =
+    cookieStore.has("authjs.session-token") ||
+    cookieStore.has("__Secure-authjs.session-token") ||
+    cookieStore.has("next-auth.session-token")
+  const ctaHref = isLoggedIn ? "/dashboard" : "/register"
 
   return (
     <div className="flex min-h-screen flex-col">
