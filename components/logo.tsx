@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 export function Logo({
@@ -8,7 +9,11 @@ export function Logo({
   showText?: boolean
 }) {
   return (
-    <span className={cn("flex items-center gap-2", className)}>
+    <Link
+      href="/"
+      aria-label="ShelfSync home"
+      className={cn("flex items-center gap-2", className)}
+    >
       <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
         <svg
           viewBox="0 0 24 24"
@@ -32,6 +37,6 @@ export function Logo({
           ShelfSync
         </span>
       )}
-    </span>
+    </Link>
   )
 }
