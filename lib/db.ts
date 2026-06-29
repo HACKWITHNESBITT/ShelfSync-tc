@@ -1,37 +1,15 @@
 import { Pool, type PoolClient } from "pg"
-import { Signer } from "@aws-sdk/rds-signer"
 
-if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
-  throw new Error(
-    "AWS credentials missing: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION required for RDS IAM authentication"
-  )
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL environment variable is not set")
 }
-
-if (!process.env.PGHOST) {
-  throw new Error("PGHOST environment variable is not set")
-}
-
-const signer = new Signer({
-  region: process.env.AWS_REGION,
-  hostname: process.env.PGHOST,
-  port: 5432,
-  username: "postgres",
-})
 
 const globalForPool = globalThis as unknown as { _pgPool?: Pool }
 
 function getPool(): Pool {
   if (!globalForPool._pgPool) {
     globalForPool._pgPool = new Pool({
-      host: process.env.PGHOST,
-      port: 5432,
-      user: "postgres",
-      database: "postgres",
-      password: async () => {
-        return signer.getAuthToken({
-          username: "postgres",
-        })
-      },
+      connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
       max: 20,
     })
