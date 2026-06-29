@@ -6,13 +6,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/logo"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
+import type { Session } from "next-auth"
 
 export function MobileNav({
   alertCount,
-  businessId,
+  session,
 }: {
   alertCount: number
-  businessId: string
+  session: Session
 }) {
   const [open, setOpen] = useState(false)
   return (

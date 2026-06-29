@@ -1,5 +1,6 @@
+import { redirect } from "next/navigation"
+import { auth } from "@/lib/auth"
 import { query } from "@/lib/db"
-import { getDefaultBusinessId } from "@/lib/getDefaultBusinessId"
 import type { Business } from "@/lib/types"
 
 export interface CurrentContext {
@@ -10,30 +11,45 @@ export interface CurrentContext {
 }
 
 /**
- * Public no-auth mode: returns the default/shared business workspace.
- * No session required. All data is scoped to a single default business.
+ * Resolves the authenticated user and their business.
+ * Redirects to /login if unauthenticated. Every data query in the app
+ * is scoped by the returned business.id — there is no RLS on Aurora.
  */
 export async function requireContext(): Promise<CurrentContext> {
-  const businessId = await getDefaultBusinessId()
+  const session = await auth()
+  if (!session?.user?.id) redirect("/login")
 
-  const { rows } = await query<Business>("SELECT * FROM businesses WHERE id = $1 LIMIT 1", [
-    businessId,
-  ])
+  const { rows } = await query<Business>(
+    "SELECT * FROM businesses WHERE owner_id = $1 LIMIT 1",
+    [session.user.id],
+  )
   const business = rows[0]
+  if (!business) redirect("/login")
 
   return {
-    userId: "public",
-    userName: "Guest",
-    userEmail: "guest@shelfsync.local",
+    userId: session.user.id,
+    userName: session.user.name ?? "",
+    userEmail: session.user.email ?? "",
     business,
   }
 }
 
-/** API-route variant: same behavior, no auth needed. */
+/** API-route variant: returns null instead of redirecting. */
 export async function getContext(): Promise<CurrentContext | null> {
-  try {
-    return await requireContext()
-  } catch {
-    return null
+  const session = await auth()
+  if (!session?.user?.id) return null
+
+  const { rows } = await query<Business>(
+    "SELECT * FROM businesses WHERE owner_id = $1 LIMIT 1",
+    [session.user.id],
+  )
+  const business = rows[0]
+  if (!business) return null
+
+  return {
+    userId: session.user.id,
+    userName: session.user.name ?? "",
+    userEmail: session.user.email ?? "",
+    business,
   }
 }
