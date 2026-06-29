@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
 import { query } from "@/lib/db"
+import { getDefaultBusinessId } from "@/lib/getDefaultBusinessId"
 import type { Business } from "@/lib/types"
 
 export interface CurrentContext {
@@ -11,45 +10,30 @@ export interface CurrentContext {
 }
 
 /**
- * Resolves the authenticated user and their business.
- * Redirects to /login if unauthenticated. Every data query in the app
- * is scoped by the returned business.id — there is no RLS on Aurora.
+ * Public no-auth mode: returns the default/shared business workspace.
+ * No session required. All data is scoped to a single default business.
  */
 export async function requireContext(): Promise<CurrentContext> {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/login")
+  const businessId = await getDefaultBusinessId()
 
-  const { rows } = await query<Business>(
-    "SELECT * FROM businesses WHERE owner_id = $1 LIMIT 1",
-    [session.user.id],
-  )
+  const { rows } = await query<Business>("SELECT * FROM businesses WHERE id = $1 LIMIT 1", [
+    businessId,
+  ])
   const business = rows[0]
-  if (!business) redirect("/login")
 
   return {
-    userId: session.user.id,
-    userName: session.user.name ?? "",
-    userEmail: session.user.email ?? "",
+    userId: "public",
+    userName: "Guest",
+    userEmail: "guest@shelfsync.local",
     business,
   }
 }
 
-/** API-route variant: returns null instead of redirecting. */
+/** API-route variant: same behavior, no auth needed. */
 export async function getContext(): Promise<CurrentContext | null> {
-  const session = await auth()
-  if (!session?.user?.id) return null
-
-  const { rows } = await query<Business>(
-    "SELECT * FROM businesses WHERE owner_id = $1 LIMIT 1",
-    [session.user.id],
-  )
-  const business = rows[0]
-  if (!business) return null
-
-  return {
-    userId: session.user.id,
-    userName: session.user.name ?? "",
-    userEmail: session.user.email ?? "",
-    business,
+  try {
+    return await requireContext()
+  } catch {
+    return null
   }
 }

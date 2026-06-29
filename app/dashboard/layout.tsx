@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
 import { getAlerts } from "@/lib/queries"
+import { requireContext } from "@/lib/session"
 import { Logo } from "@/components/logo"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { UserMenu } from "@/components/dashboard/user-menu"
@@ -11,13 +10,9 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await auth()
-  if (!session?.user) redirect("/login")
+  const ctx = await requireContext()
 
-  const businessId = (session.user as { businessId?: string }).businessId
-  if (!businessId) redirect("/login")
-
-  const alerts = await getAlerts(businessId)
+  const alerts = await getAlerts(ctx.business.id)
   const alertCount = alerts.length
 
   return (
@@ -32,8 +27,8 @@ export default async function DashboardLayout({
         </div>
         <div className="border-t border-border px-3 py-3">
           <UserMenu
-            name={session.user.name ?? "User"}
-            email={session.user.email ?? ""}
+            name={ctx.userName}
+            email={ctx.userEmail}
           />
         </div>
       </aside>
@@ -42,7 +37,7 @@ export default async function DashboardLayout({
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Topbar */}
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-card px-4 lg:px-6">
-          <MobileNav alertCount={alertCount} session={session} />
+          <MobileNav alertCount={alertCount} businessId={ctx.business.id} />
           <div className="hidden lg:block" />
           <div className="flex items-center gap-3">
             {alertCount > 0 && (
@@ -52,8 +47,8 @@ export default async function DashboardLayout({
             )}
             <div className="lg:hidden">
               <UserMenu
-                name={session.user.name ?? "User"}
-                email={session.user.email ?? ""}
+                name={ctx.userName}
+                email={ctx.userEmail}
               />
             </div>
           </div>
