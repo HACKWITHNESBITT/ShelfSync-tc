@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Plus, ArrowRight, ArrowLeftRight } from "lucide-react"
 import {
@@ -177,14 +177,22 @@ export function NewTransferButton({
   )
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  })
+function FormattedDate({ iso }: { iso: string }) {
+  const [text, setText] = useState("")
+
+  useEffect(() => {
+    setText(
+      new Date(iso).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    )
+  }, [iso])
+
+  return text || "—"
 }
 
 export function TransfersView({
@@ -271,7 +279,7 @@ export function TransfersView({
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {formatDate(t.created_at)}
+                      <FormattedDate iso={t.created_at} />
                     </TableCell>
                   </TableRow>
                 ))}

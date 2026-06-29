@@ -1,7 +1,10 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { ActivityItem } from "@/lib/types"
 import { ArrowLeftRight, Package, Bell, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react"
 
 function ActivityIcon({ type }: { type: string }) {
   const cls = "h-3.5 w-3.5"
@@ -11,15 +14,27 @@ function ActivityIcon({ type }: { type: string }) {
   return <Package className={cls} />
 }
 
-function timeAgo(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return "just now"
-  if (mins < 60) return `${mins}m ago`
-  const hrs = Math.floor(mins / 60)
-  if (hrs < 24) return `${hrs}h ago`
-  const days = Math.floor(hrs / 24)
-  return `${days}d ago`
+function TimeAgoText({ iso }: { iso: string }) {
+  const [text, setText] = useState("just now")
+
+  useEffect(() => {
+    const update = () => {
+      const diff = Date.now() - new Date(iso).getTime()
+      const mins = Math.floor(diff / 60000)
+      if (mins < 1) setText("just now")
+      else if (mins < 60) setText(`${mins}m ago`)
+      else {
+        const hrs = Math.floor(mins / 60)
+        if (hrs < 24) setText(`${hrs}h ago`)
+        else setText(`${Math.floor(hrs / 24)}d ago`)
+      }
+    }
+    update()
+    const interval = setInterval(update, 60000)
+    return () => clearInterval(interval)
+  }, [iso])
+
+  return text
 }
 
 export function ActivityFeed({ items }: { items: ActivityItem[] }) {
@@ -52,7 +67,7 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
               <div className="min-w-0 flex-1">
                 <p className="text-sm leading-snug text-foreground">{item.message}</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  {timeAgo(item.created_at)}
+                  <TimeAgoText iso={item.created_at} />
                 </p>
               </div>
             </div>

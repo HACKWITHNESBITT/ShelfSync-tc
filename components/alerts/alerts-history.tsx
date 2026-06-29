@@ -1,3 +1,5 @@
+"use client"
+
 import { CheckCircle } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -10,13 +12,22 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import type { AlertDetail } from "@/lib/types"
+import { useEffect, useState } from "react"
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  })
+function FormattedDate({ iso }: { iso: string }) {
+  const [text, setText] = useState("")
+
+  useEffect(() => {
+    setText(
+      new Date(iso).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    )
+  }, [iso])
+
+  return text || "—"
 }
 
 export function AlertsHistory({ alerts }: { alerts: AlertDetail[] }) {
@@ -53,7 +64,7 @@ export function AlertsHistory({ alerts }: { alerts: AlertDetail[] }) {
                 <TableCell>{a.branch_name}</TableCell>
                 <TableCell>{a.quantity}</TableCell>
                 <TableCell>{a.low_stock_threshold}</TableCell>
-                <TableCell className="text-muted-foreground">{formatDate(a.created_at)}</TableCell>
+                <TableCell className="text-muted-foreground"><FormattedDate iso={a.created_at} /></TableCell>
               </TableRow>
             ))}
           </TableBody>
