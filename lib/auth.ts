@@ -16,6 +16,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log('DEBUG DATABASE_URL RAW:', JSON.stringify(process.env.DATABASE_URL))
+        console.log('DEBUG DATABASE_URL LENGTH:', (process.env.DATABASE_URL || '').length)
         const email = String(credentials?.email ?? "")
           .trim()
           .toLowerCase()

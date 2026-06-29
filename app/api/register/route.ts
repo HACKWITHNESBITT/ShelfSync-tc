@@ -5,6 +5,8 @@ import { createId } from "@/lib/id"
 import { seedDemoData } from "@/lib/seed"
 
 export async function POST(req: Request) {
+  console.log('DEBUG DATABASE_URL RAW:', JSON.stringify(process.env.DATABASE_URL))
+  console.log('DEBUG DATABASE_URL LENGTH:', (process.env.DATABASE_URL || '').length)
   let body: { name?: string; email?: string; password?: string; businessName?: string }
   try {
     body = await req.json()
